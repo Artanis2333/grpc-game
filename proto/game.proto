@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package game;
+
+option go_package = "github.com/Artanis2333/grpc-game/proto";
+
+// GameService 定义了游戏服务
+service GameService {
+  // BidirectionalStream 双向流式通信
+  rpc BidirectionalStream(stream GameRequest) returns (stream GameResponse);
+}
+
+// GameRequest 客户端请求消息
+message GameRequest {
+  string player_id = 1;      // 玩家ID
+  string content = 2;         // 消息内容
+  int64 timestamp = 3;        // 时间戳
+  RequestType type = 4;       // 请求类型
+}
+
+// GameResponse 服务器响应消息
+message GameResponse {
+  string from_player_id = 1;  // 消息来源玩家ID
+  string content = 2;          // 消息内容
+  int64 timestamp = 3;         // 时间戳
+  ResponseType type = 4;       // 响应类型
+  string system_message = 5;   // 系统消息（可选）
+}
+
+// RequestType 请求类型
+enum RequestType {
+  REQUEST_UNKNOWN = 0;
+  REQUEST_CHAT = 1;        // 聊天消息
+  REQUEST_ACTION = 2;      // 游戏动作
+  REQUEST_HEARTBEAT = 3;   // 心跳
+  REQUEST_DISCONNECT = 4;  // 断开连接
+}
+
+// ResponseType 响应类型
+enum ResponseType {
+  RESPONSE_UNKNOWN = 0;
+  RESPONSE_CHAT = 1;        // 聊天消息
+  RESPONSE_ACTION = 2;      // 游戏动作
+  RESPONSE_HEARTBEAT = 3;   // 心跳响应
+  RESPONSE_SYSTEM = 4;      // 系统消息
+  RESPONSE_ERROR = 5;       // 错误消息
+}
